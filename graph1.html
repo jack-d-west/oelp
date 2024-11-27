@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph 1: Predictions with Noisy Outputs</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Predictions with Noisy Outputs</h1>
+    <label for="epsilon">Epsilon:</label>
+    <input type="range" id="epsilon" name="epsilon" min="0.01" max="20" step="0.01" value="1">
+    <span id="epsilon-value">1</span>
+    <br><br>
+
+    <label for="noise_type">Noise Type:</label>
+    <select id="noise_type" name="noise_type">
+        <option value="Laplace">Laplace</option>
+        <option value="Gaussian">Gaussian</option>
+    </select>
+    <br><br>
+
+    <canvas id="plot"></canvas>
+
+    <script>
+        let chart;  // Declare chart globally to update it
+
+        function updatePlot(epsilon, noiseType) {
+            $.ajax({
+                url: '/plot',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ epsilon: epsilon, noise_type: noiseType }),
+                success: function(response) {
+                    const labels = Array.from({ length: response.true_values.length }, (_, i) => i + 1);
+                    const trueValuesData = labels.map((x, i) => ({ x: x, y: response.true_values[i] })); // For scatter plot
+
+                    if (chart) {
+                        // Update chart data
+                        chart.data.labels = labels;
+                        chart.data.datasets[0].data = trueValuesData;
+                        chart.data.datasets[1].data = response.original_predictions;
+                        chart.data.datasets[2].data = response.noisy_predictions;
+                        chart.update();
+                    } else {
+                        // Initialize chart if it doesn't exist
+                        const ctx = document.getElementById('plot').getContext('2d');
+                        chart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        type: 'scatter', // Render true values as scatter plot
+                                        label: 'True Values',
+                                        data: trueValuesData,
+                                        borderColor: 'blue',
+                                        backgroundColor: 'blue',
+                                        pointRadius: 4,
+                                        pointHoverRadius: 6,
+                                        showLine: false // Disable connecting lines
+                                    },
+                                    {
+                                        label: 'Original Predictions',
+                                        data: response.original_predictions,
+                                        borderColor: 'green',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    },
+                                    {
+                                        label: `Noisy Predictions (${noiseType})`,
+                                        data: response.noisy_predictions,
+                                        borderColor: 'red',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    x: { title: { display: true, text: 'Index' } },
+                                    y: { title: { display: true, text: 'Values' } }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const epsilon = parseFloat($('#epsilon').val());
+            const noiseType = $('#noise_type').val();
+            updatePlot(epsilon, noiseType);
+
+            $('#epsilon').on('input', function () {
+                $('#epsilon-value').text(this.value);
+                updatePlot(parseFloat(this.value), $('#noise_type').val());
+            });
+
+            $('#noise_type').on('change', function () {
+                updatePlot(parseFloat($('#epsilon').val()), this.value);
+            });
+        });
+    </script>
+</body>
+</html>

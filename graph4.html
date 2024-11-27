@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph 2: Noisy X vs. No Noise</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Prediction Comparison: Noisy X vs. No Noise</h1>
+    <label for="epsilon_2">Epsilon:</label>
+    <input type="range" id="epsilon_2" name="epsilon_2" min="0.01" max="20" step="0.01" value="1">
+    <span id="epsilon-value-2">1</span>
+    <br><br>
+
+    <label for="noise_type_2">Noise Type:</label>
+    <select id="noise_type_2" name="noise_type_2">
+        <option value="Laplace">Laplace</option>
+        <option value="Gaussian">Gaussian</option>
+    </select>
+    <br><br>
+
+    <canvas id="plot_noisy_coeff"></canvas>
+
+    <script>
+        let chartNoisyX;  // Declare chart globally to update it
+
+        function updatePlotNoisyX(epsilon, noiseType) {
+            $.ajax({
+                url: '/plot_noisy_coeff',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ epsilon: epsilon, noise_type: noiseType }),
+                success: function(response) {
+                    const labels = Array.from({ length: response.true_values.length }, (_, i) => i + 1);
+                    const trueValuesData = labels.map((x, i) => ({ x: x, y: response.true_values[i] })); // For scatter plot
+
+                    if (chartNoisyX) {
+                        // Update existing chart data
+                        chartNoisyX.data.labels = labels;
+                        chartNoisyX.data.datasets[0].data = trueValuesData;
+                        chartNoisyX.data.datasets[1].data = response.predictions_no_noise_coeff;
+                        chartNoisyX.data.datasets[2].data = response.predictions_noisy_coeff;
+                        chartNoisyX.update();
+                    } else {
+                        // Initialize the chart if it doesn't exist
+                        const ctx = document.getElementById('plot_noisy_coeff').getContext('2d');
+                        chartNoisyX = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        type: 'scatter', // Render true values as scatter plot
+                                        label: 'True Values',
+                                        data: trueValuesData,
+                                        borderColor: 'blue',
+                                        backgroundColor: 'blue',
+                                        pointRadius: 4,
+                                        pointHoverRadius: 6,
+                                        showLine: false // Disable connecting lines
+                                    },
+                                    {
+                                        label: 'Predictions without Noisy X',
+                                        data: response.predictions_no_noise_coeff,
+                                        borderColor: 'green',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    },
+                                    {
+                                        label: `Predictions with Noisy X (${noiseType})`,
+                                        data: response.predictions_noisy_coeff,
+                                        borderColor: 'red',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    x: { title: { display: true, text: 'Index' } },
+                                    y: { title: { display: true, text: 'Values' } }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const epsilon = parseFloat($('#epsilon_2').val());
+            const noiseType = $('#noise_type_2').val();
+            updatePlotNoisyX(epsilon, noiseType);
+
+            $('#epsilon_2').on('input', function () {
+                $('#epsilon-value-2').text(this.value);
+                updatePlotNoisyX(parseFloat(this.value), $('#noise_type_2').val());
+            });
+
+            $('#noise_type_2').on('change', function () {
+                updatePlotNoisyX(parseFloat($('#epsilon_2').val()), this.value);
+            });
+        });
+    </script>
+</body>
+</html>
