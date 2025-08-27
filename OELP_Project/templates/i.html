@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy-Aware Learning</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+        }
+
+        /* Header styling */
+        .header {
+            background-color: #549ef3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Horizontal toolbar styling */
+        .horizontal-toolbar {
+            background-color: #2C3E50;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .horizontal-toolbar button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .horizontal-toolbar button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Main container */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Split into two equal parts */
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Left section styling */
+        .left-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-section h2 {
+            margin-top: 0;
+            color: #006D5B;
+        }
+
+        .left-section p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .left-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+            color: #444;
+        }
+
+        .left-section li {
+            margin-bottom: 8px;
+        }
+
+        /* Right section styling */
+        .right-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Menu container styling */
+        .menu-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center; /* Center the menu items horizontally */
+        }
+
+        .menu-item {
+            background-color: #e8f5f2;
+            border: 1px solid #d1e7e4;
+            border-radius: 10px;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            flex: 1 1 calc(50% - 20px); /* Two items per row with a gap */
+            max-width: 300px;
+        }
+
+        .menu-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-item h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #007BFF;
+        }
+
+        .menu-item p {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr; /* Stack sections vertically */
+            }
+
+            .menu-item {
+                flex: 1 1 100%; /* Stack items vertically on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        HandsOnData: Privacy-Aware Learning
+    </div>
+    <div class="horizontal-toolbar">
+        <button onclick="location.href='/'" style="background-color: #0056b3; color: white;">Home</button>
+        <button onclick="location.href='/ab'">About Us</button>
+        <button onclick="location.href='/contri'">Contributions</button>
+        <button onclick="location.href='/r'">Resources</button>
+        <button onclick="location.href='/cus'">Contact Us</button>
+        <button onclick="location.href='/ru'">User Guide</button>
+    </div>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>What We Did</h2>
+            <p>
+                Welcome to HandsOnData! Here, you can explore the techniques and tools implemented in this project to learn data analytics, privacy-aware models, and Linear Regression.
+            </p>
+            <p><strong>Features:</strong></p>
+            <ul>
+                <li>Applied two different types of noises:</li>
+                <ul>
+                    <li>Laplace</li>
+                    <li>Gaussian</li>
+                </ul>
+                <li>Enabled Clipping</li>
+                <li>Applied Linear Regression</li>
+                <li>Visualized different types of noises</li>
+            </ul>
+            <p><strong>Key Formulas:</strong></p>
+                <ul>
+                    <!-- Linear Regression Coefficient Formula -->
+                    <li>Linear Regression Coefficients: 
+                        \[
+                        \hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2}, \quad
+                        \hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
+                        \]
+                    </li>
+
+                    <!-- Laplace Noise Formula -->
+                    <li>Laplace Noise:
+                        \[
+                        \text{Laplace}(b) = \frac{1}{2b} e^{-\frac{|x|}{b}}
+                        \]
+                        where \( b \) is the scale parameter.
+                    </li>
+
+                    <!-- Gaussian Noise Formula -->
+                    <li>Gaussian Noise:
+                        \[
+                        \text{Gaussian}(x; \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+                        \]
+                        where \( \mu \) is the mean and \( \sigma^2 \) is the variance.
+                    </li>
+                </ul>
+
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="menu-container">
+                <div class="menu-item" id="data-visualization" onclick="location.href='/i';">
+                    <h3>Data Visualization and Preprocessing</h3>
+                    <p>Get hands-on experience with various data visualization techniques.</p>
+                </div>
+                <div class="menu-item" onclick="location.href='https://colab.research.google.com/drive/1fyAUlwpRAtzJQ4diwMOqOkPdPI-3lYg8?usp=sharing/';">
+                    <h3>Google Colab</h3>
+                    <p>See how the code works by accessing the interactive Google Colab notebooks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

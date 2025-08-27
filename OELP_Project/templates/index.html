@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy-Aware Learning</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f9fc;
+}
+
+/* Header styling */
+.header {
+    background-color: #549ef3;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Horizontal toolbar styling */
+.horizontal-toolbar {
+    background-color: #2C3E50;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.horizontal-toolbar button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.horizontal-toolbar button:hover {
+    background-color: #0056b3;
+}
+
+/* Main container with 2x2 grid layout */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    grid-template-rows: 1fr 1fr; /* Two rows */
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Section styling for each box */
+.section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Enable Flexbox */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    text-align: center;
+}
+
+/* Menu container styling */
+.menu-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Center the menu items horizontally */
+}
+
+.menu-item {
+    background-color: #e8f5f2;
+    border: 1px solid #d1e7e4;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    flex: 1 1 calc(50% - 20px); /* Two items per row with a gap */
+    max-width: 300px;
+}
+
+.menu-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.menu-item h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #007BFF;
+}
+
+.menu-item p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Stack sections vertically on smaller screens */
+    }
+
+    .menu-item {
+        flex: 1 1 100%; /* Stack items vertically on small screens */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        Data Visualization
+    </div>
+    <div class="horizontal-toolbar">
+        <button onclick="location.href='/'">Home</button>
+        <button onclick="location.href='/ab'">About Us</button>
+        <button onclick="location.href='/contri'">Contributions</button>
+        <button onclick="location.href='/r'">Resources</button>
+        <button onclick="location.href='/cus'">Contact Us</button>
+    </div>
+    <div class="container">
+        <!-- Box 1 (Top-left) -->
+        <div class="section">
+            <div class="menu-item" onclick="location.href='/graph1';">
+                <h3>Graph 1</h3>
+                <p>Predictions with Noisy Outputs</p>
+            </div>
+        </div>
+
+        <!-- Box 2 (Top-right) -->
+        <div class="section">
+            <div class="menu-item" onclick="location.href='/graph2';">
+                <h3>Graph 2</h3>
+                <p>Noisy X vs. No Noise</p>
+            </div>
+        </div>
+
+        <!-- Box 3 (Bottom-left) -->
+        <div class="section">
+            <div class="menu-item" onclick="location.href='/graph3';">
+                <h3>Graph 3</h3>
+                <p>Noisy Coefficients</p>
+            </div>
+        </div>
+
+        <!-- Box 4 (Bottom-right) -->
+        <div class="section">
+            <div class="menu-item" onclick="location.href='/graph4';">
+                <h3>Graph 4</h3>
+                <p>Noisy Y Analysis</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

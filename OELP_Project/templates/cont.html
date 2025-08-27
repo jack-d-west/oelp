@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy-Aware Learning</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            display: flex; /* Flexbox for centering */
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the body spans full height */
+        }
+
+        /* Header styling */
+        .header {
+            background-color: #549ef3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Horizontal toolbar styling */
+        .horizontal-toolbar {
+            background-color: #2C3E50;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .horizontal-toolbar button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .horizontal-toolbar button:hover {
+            background-color: #0056b3;
+        }
+
+        .horizontal-toolbar button.active {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        /* Center container */
+        .container {
+            flex: 1; /* Allow the container to fill available space */
+            display: flex; /* Flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+
+        /* Left section styling */
+        .left-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%; /* Ensure responsiveness */
+            text-align: center;
+        }
+
+        .left-section h2 {
+            margin-top: 0;
+            color: #006D5B;
+        }
+
+        .left-section p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Contributions
+    </div>
+    <div class="horizontal-toolbar">
+        <button onclick="location.href='/'">Home</button>
+        <button onclick="location.href='/ab'">About Us</button>
+        <button onclick="location.href='/contri'" class="active">Contributions</button>
+        <button onclick="location.href='/r'">Resources</button>
+        <button onclick="location.href='/cus'">Contact Us</button>
+    </div>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>Contributions</h2>
+            <ul style="text-align: left">
+                <li>
+                Jakadeer: Developed the site
+                </li>
+            <li>
+                Rahul: Trained Models and Preprocessing Dataset
+            </li>
+        </ul>
+        </div>
+    </div>
+</body>
+</html>

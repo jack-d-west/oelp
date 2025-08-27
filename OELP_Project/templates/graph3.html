@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis: Noisy Coefficients</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Header styling */
+        .header-box {
+            background-color: #549ef3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-box h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .header-box p {
+            margin: 5px 0 0;
+        }
+
+        /* Horizontal toolbar styling */
+        .horizontal-toolbar {
+            background-color: #2C3E50;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .horizontal-toolbar button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .horizontal-toolbar button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            background-color: #F4F4F4;
+            width: 300px;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar label, .sidebar input, .sidebar select {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .sidebar input[type="range"] {
+            width: 100%;
+        }
+
+        .sidebar button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sidebar button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Main layout container */
+        .main-container {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        /* Content area styles */
+        .content {
+            margin-left: 20px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Box -->
+    <div class="header-box">
+        <h1>Analysis: Noisy Coefficients</h1>
+        <p>Explore the effect of noise and clipping on the coefficients of a model.</p>
+    </div>
+
+    <!-- Horizontal Toolbar -->
+    <div class="horizontal-toolbar">
+        <button onclick="location.href='/'">Home</button>
+        <button onclick="location.href='/i'">Visualization</button>
+        <button onclick="location.href='/ab'">About Us</button>
+        <button onclick="location.href='/contri'">Contributions</button>
+        <button onclick="location.href='/r'">Resources</button>
+        <button onclick="location.href='/cus'">Contact Us</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <label for="epsilon_3">Epsilon:</label>
+            <input type="range" id="epsilon_3" name="epsilon_3" min="0.01" max="20" step="0.01" value="0.01">
+            <span id="epsilon-value-3">0.01</span>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="noise_type_3">Noise Type:</label>
+                <select id="noise_type_3" name="noise_type_3">
+                    <option value="Laplace">Laplace</option>
+                    <option value="Gaussian">Gaussian</option>
+                </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="clipping_3">Enable Clipping:</label>
+                <input type="checkbox" id="clipping_2" name="clipping_2">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="min_value_3">Min Value:</label>
+                <input type="number" id="min_value_2" name="min_value_2" value="0" step="0.1">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="max_value_3">Max Value:</label>
+                <input type="number" id="max_value_2" name="max_value_2" value="100" step="0.1">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="sampling_size_3">Sampling Rate:</label>
+                <input type="number" id="sampling_size_3" name="sampling_size_3" value="10" min="1" max="1000" step="1">
+            </div>
+        </div>
+
+
+ 
+
+            <canvas id="plot_noisy_y"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Same JavaScript code for chart initialization and AJAX requests as earlier
+        let chartNoisyY; 
+
+        function updatePlotNoisyY(epsilon, noiseType, clipping, minValue, maxValue, samplingSize) {
+            const requestData = {
+                epsilon: epsilon,
+                noise_type: noiseType,
+                sampling_size: samplingSize
+            };
+
+            if (clipping) {
+                requestData.clipping = 'yes';
+                requestData.min_value = minValue;
+                requestData.max_value = maxValue;
+            } else {
+                requestData.clipping = 'no';
+            }
+
+            $.ajax({
+                url: '/plot_noisy_y',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    const labels = Array.from({ length: response.true_values.length }, (_, i) => i + 1);
+                    const trueValuesData = labels.map((x, i) => ({ x: x, y: response.true_values[i] })); 
+
+                    if (chartNoisyY) {
+                        chartNoisyY.data.labels = labels;
+                        chartNoisyY.data.datasets[0].data = trueValuesData;
+                        chartNoisyY.data.datasets[1].data = response.predictions_no_noise_y;
+                        chartNoisyY.data.datasets[2].data = response.predictions_noisy_y;
+                        chartNoisyY.update();
+                    } else {
+                        const ctx = document.getElementById('plot_noisy_y').getContext('2d');
+                        chartNoisyY = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        type: 'scatter',
+                                        label: 'True Values',
+                                        data: trueValuesData,
+                                        borderColor: 'blue',
+                                        backgroundColor: 'blue',
+                                        pointRadius: 4,
+                                        pointHoverRadius: 6,
+                                        showLine: false
+                                    },
+                                    {
+                                        label: 'Predictions without Noisy Y',
+                                        data: response.predictions_no_noise_y,
+                                        borderColor: 'green',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    },
+                                    {
+                                        label: `Predictions with Noisy Y (${noiseType})`,
+                                        data: response.predictions_noisy_y,
+                                        borderColor: 'red',
+                                        borderDash: [5, 5],
+                                        fill: false
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    x: { title: { display: true, text: 'Index' } },
+                                    y: { title: { display: true, text: 'Values' } }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const epsilon = parseFloat($('#epsilon_3').val());
+            const noiseType = $('#noise_type_3').val();
+            const clipping = $('#clipping_3').is(':checked');
+            const minValue = parseFloat($('#min_value_3').val());
+            const maxValue = parseFloat($('#max_value_3').val());
+            const samplingSize = parseInt($('#sampling_size_3').val());
+
+            updatePlotNoisyY(epsilon, noiseType, clipping, minValue, maxValue, samplingSize);
+
+            $('#epsilon_3').on('input', function () {
+                $('#epsilon-value-3').text(this.value);
+                updatePlotNoisyY(parseFloat(this.value), $('#noise_type_3').val(), $('#clipping_3').is(':checked'),
+                                  parseFloat($('#min_value_3').val()), parseFloat($('#max_value_3').val()), parseInt($('#sampling_size_3').val()));
+            });
+
+            $('#noise_type_3').on('change', function () {
+                updatePlotNoisyY(parseFloat($('#epsilon_3').val()), this.value, $('#clipping_3').is(':checked'),
+                                  parseFloat($('#min_value_3').val()), parseFloat($('#max_value_3').val()), parseInt($('#sampling_size_3').val()));
+            });
+
+            $('#clipping_3').on('change', function () {
+                updatePlotNoisyY(parseFloat($('#epsilon_3').val()), $('#noise_type_3').val(), this.checked,
+                                  parseFloat($('#min_value_3').val()), parseFloat($('#max_value_3').val()), parseInt($('#sampling_size_3').val()));
+            });
+
+            $('#min_value_3, #max_value_3').on('input', function () {
+                updatePlotNoisyY(parseFloat($('#epsilon_3').val()), $('#noise_type_3').val(), $('#clipping_3').is(':checked'),
+                                  parseFloat($('#min_value_3').val()), parseFloat($('#max_value_3').val()), parseInt($('#sampling_size_3').val()));
+            });
+
+            $('#sampling_size_3').on('input', function () {
+                $('#sampling-size-value-3').text(this.value);
+                updatePlotNoisyY(parseFloat($('#epsilon_3').val()), $('#noise_type_3').val(), $('#clipping_3').is(':checked'),
+                                  parseFloat($('#min_value_3').val()), parseFloat($('#max_value_3').val()), parseInt(this.value));
+            });
+        });
+    </script>
+</body>
+</html>
